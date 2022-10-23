@@ -9,6 +9,8 @@ import 'package:custom_lint_builder/custom_lint_builder.dart';
 const _enableLogs = false;
 
 class NoCallsAfterNullLinter extends PluginBase {
+  static const _lintName = 'avoid_calls_after_null';
+
   @override
   Stream<Lint> getLints(ResolvedUnitResult resolvedUnitResult) async* {
     _log(() => 'Lib: ${resolvedUnitResult.path}');
@@ -53,9 +55,9 @@ class NoCallsAfterNullLinter extends PluginBase {
               'Call: $node, target: $realTarget (candidates: $candidates)');
           if (candidates.contains(realTarget)) {
             final lint = Lint(
-              code: 'no_calls_after_null',
-              message:
-                  'This target is null here. It has been assigned to null in this scope earlier.',
+              code: _lintName,
+              message: '$_lintName\n\nThis target is null here. '
+                  'It has been assigned to null in this scope earlier.',
               correction: 'Move this call before "$realTarget = null"',
               location: resolvedUnitResult.lintLocationFromOffset(
                 node.offset,
