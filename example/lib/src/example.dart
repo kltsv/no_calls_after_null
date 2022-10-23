@@ -10,6 +10,26 @@ void main() {
 
   // LINT
   topLevel?.innerVar?.foo();
+
+  A? localA;
+
+  // LINT
+  localA?.foo();
+
+  A? localA2 = A();
+
+  // NO LINT
+  localA2.foo();
+
+  A? localA3 = null;
+
+  // LINT
+  localA3?.foo();
+
+  final A? localA4 = null;
+
+  // LINT
+  localA4?.foo();
 }
 
 class A {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
 const _enableLogs = true;
@@ -30,6 +31,20 @@ class NoCallsAfterNullLinter extends PluginBase {
             candidates.add(variable);
           } else {
             candidates.remove(variable);
+          }
+        },
+        onVisitVariableDeclaration: (VariableDeclaration node) {
+          _log(() => 'Variable: $node');
+          final element = node.declaredElement2;
+          if (element == null) {
+            return;
+          }
+
+          // if nullable final/var without assignment (or assigned 'null')
+          if (element.type.nullabilitySuffix == NullabilitySuffix.question &&
+              (node.initializer == null ||
+                  node.initializer.toString() == 'null')) {
+            candidates.add(element.name);
           }
         },
         onVisitMethodCall: (node) {
@@ -64,12 +79,14 @@ class LinterVisitor extends RecursiveAstVisitor {
   void Function(MethodDeclaration node) onVisitMethodDeclaration;
   void Function(MethodDeclaration node) exitVisitMethodDeclaration;
   void Function(AssignmentExpression node) onVisitAssignment;
+  void Function(VariableDeclaration node) onVisitVariableDeclaration;
   void Function(MethodInvocation node) onVisitMethodCall;
 
   LinterVisitor({
     required this.onVisitMethodDeclaration,
     required this.exitVisitMethodDeclaration,
     required this.onVisitAssignment,
+    required this.onVisitVariableDeclaration,
     required this.onVisitMethodCall,
   });
 
@@ -85,6 +102,12 @@ class LinterVisitor extends RecursiveAstVisitor {
   visitAssignmentExpression(AssignmentExpression node) {
     onVisitAssignment(node);
     return super.visitAssignmentExpression(node);
+  }
+
+  @override
+  visitVariableDeclaration(VariableDeclaration node) {
+    onVisitVariableDeclaration(node);
+    return super.visitVariableDeclaration(node);
   }
 
   @override
