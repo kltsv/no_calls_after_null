@@ -1,3 +1,4 @@
-## 1.0.0
+## 0.1.0
 
-- Initial version.
+- Warning for the case when there is a call on a nullable object when null has been assigned in
+  current scope 

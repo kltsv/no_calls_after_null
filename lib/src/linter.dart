@@ -6,7 +6,7 @@ import 'package:analyzer/dart/ast/visitor.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:custom_lint_builder/custom_lint_builder.dart';
 
-const _enableLogs = true;
+const _enableLogs = false;
 
 class NoCallsAfterNullLinter extends PluginBase {
   @override
