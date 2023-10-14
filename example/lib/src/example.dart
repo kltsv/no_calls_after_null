@@ -3,17 +3,17 @@ A? topLevel = A();
 void main() {
   topLevel = null;
 
-  // LINT
+  // expect_lint: avoid_calls_after_null
   topLevel?.foo();
 
   topLevel?.innerVar = null;
 
-  // LINT
+  // expect_lint: avoid_calls_after_null
   topLevel?.innerVar?.foo();
 
   A? localA;
 
-  // LINT
+  // expect_lint: avoid_calls_after_null
   localA?.foo();
 
   A? localA2 = A();
@@ -23,12 +23,12 @@ void main() {
 
   A? localA3 = null;
 
-  // LINT
+  // expect_lint: avoid_calls_after_null
   localA3?.foo();
 
   final A? localA4 = null;
 
-  // LINT
+  // expect_lint: avoid_calls_after_null
   localA4?.foo();
 }
 
@@ -38,7 +38,7 @@ class A {
   void foo() {
     innerVar = null;
 
-    // LINT
+    // expect_lint: avoid_calls_after_null
     innerVar?.foo();
 
     innerVar = A();
@@ -47,7 +47,7 @@ class A {
 
     innerVar?.innerVar = null;
 
-    // LINT
+    // expect_lint: avoid_calls_after_null
     innerVar?.innerVar?.foo();
 
     innerVar?.innerVar = A();
